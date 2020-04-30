@@ -7,11 +7,11 @@ const wss = new WebSocket.Server({ port: PORT });
 console.log(`Starting server on port ${PORT}`)
 
 wss.on('connection', function connection(ws) {
-  console.log('New connection!!!')
+  console.log('New connection')
 
   ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
+    console.log('received from client: ', message);
   });
 
-  ws.send('something');
+  ws.send('Im on the server');
 });
