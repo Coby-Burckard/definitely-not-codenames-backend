@@ -1,0 +1,22 @@
+{
+  "name": "definitely-not-codenames-backend",
+  "version": "1.0.0",
+  "description": "A server for not codenames",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Coby-Burckard/definitely-not-codenames-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Coby-Burckard/definitely-not-codenames-backend/issues"
+  },
+  "homepage": "https://github.com/Coby-Burckard/definitely-not-codenames-backend#readme",
+  "dependencies": {
+    "ws": "^7.2.5"
+  }
+}
