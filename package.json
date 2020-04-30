@@ -4,7 +4,8 @@
   "description": "A server for not codenames",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,8 @@
   "homepage": "https://github.com/Coby-Burckard/definitely-not-codenames-backend#readme",
   "dependencies": {
     "ws": "^7.2.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.3"
   }
 }
