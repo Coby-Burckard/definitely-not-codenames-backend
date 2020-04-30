@@ -1,17 +1,29 @@
-const WebSocket = require('ws');
+const WebSocket = require("ws");
 
-const PORT = process.env.WS_PORT || 8080
+const PORT = process.env.WS_PORT || 8080;
 
 const wss = new WebSocket.Server({ port: PORT });
 
-console.log(`Starting server on port ${PORT}`)
+const clients = [];
 
-wss.on('connection', function connection(ws) {
-  console.log('New connection')
+console.log(`Starting server on port ${PORT}`);
 
-  ws.on('message', function incoming(message) {
-    console.log('received from client: ', message);
+wss.on("connection", (ws) => {
+  console.log("New connection");
+
+  clients.push(ws);
+
+  ws.on("message", function incoming(message) {
+    console.log("received from client: ", message);
+    clients.forEach((client) => {
+      client.send(message);
+    });
   });
 
-  ws.send('Im on the server');
+  ws.send("Im on the server");
+});
+
+wss.on("message", (message) => {
+  console.log9;
+  ws.send(message);
 });
