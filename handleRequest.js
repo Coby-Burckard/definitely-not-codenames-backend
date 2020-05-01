@@ -17,7 +17,12 @@ const handleRequest = ({ rooms }, ws) => clientData => {
 
     console.log('created room', roomId);
 
-    ws.send(roomId);
+    const message = JSON.stringify({
+      type: 'ROOM_CREATED',
+      payload: { id: roomId },
+    });
+
+    ws.send(message);
   }
 };
 
