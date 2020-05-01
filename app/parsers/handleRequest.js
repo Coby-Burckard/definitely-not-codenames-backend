@@ -1,7 +1,8 @@
-const Request = require("../features/Request");
-const Room = require("../features/Room");
+const Request = require('../features/Request');
+const Room = require('../features/Room');
+const Response = require('../features/Response');
 
-const handleRequest = ({ rooms }, ws) => (clientData) => {
+const handleRequest = (app, ws, user) => clientData => {
   const request = Request.fromClientData(clientData);
 
   if (!request) {
@@ -9,20 +10,67 @@ const handleRequest = ({ rooms }, ws) => (clientData) => {
     return;
   }
 
-  if (request.type === "CREATE_ROOM") {
-    const newRoom = new Room();
+  switch (request.type) {
+    case 'CREATE_ROOM':
+      {
+        const newRoom = new Room();
+        app.rooms.set(newRoom.id, newRoom);
 
-    const roomId = newRoom.id;
-    rooms.set(newRoom.id, newRoom);
+        console.log('created room', newRoom.id);
 
-    console.log("created room", roomId);
+        user.roomID = newRoom.id;
 
-    const payload = JSON.stringify({
-      type: "ROOM_CREATED",
-      payload: { id: roomId },
-    });
+        ws.send(
+          Response.fromObject({
+            type: 'ROOM_CREATED',
+            payload: { id: newRoom.id },
+          })
+        );
+      }
+      break;
+    case 'JOIN_ROOM':
+      {
+        const existingRoom = app.rooms.get(request.payload.id);
 
-    ws.send(payload);
+        if (!existingRoom) {
+          ws.send(Response.error('404'));
+          break;
+        }
+
+        existingRoom.users.add(user.id);
+        user.roomID = existingRoom.id;
+
+        console.log('Added user to room:', user.id);
+      }
+      break;
+    case 'SEND_MESSAGE':
+      {
+        const room = app.rooms.get(user.roomID);
+
+        const { message } = request.payload;
+
+        if (!message) {
+          ws.send(Response.error('30'));
+          break;
+        }
+
+        // Doesn't do anything right now
+        room.feed.addMessage(message);
+
+        console.log(JSON.stringify(room, null, 2));
+        room.users.forEach(userID => {
+          console.log('sending to:', userID);
+          const roomUserConnection = app.users.get(userID).connection;
+          roomUserConnection.send(
+            Response.fromObject({
+              type: 'MESSAGE_RECEIVED',
+              payload: { message },
+            })
+          );
+        });
+      }
+      break;
+    default:
   }
 };
 

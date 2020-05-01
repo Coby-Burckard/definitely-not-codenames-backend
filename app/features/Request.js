@@ -1,27 +1,20 @@
 class Request {
-  constructor(type, data) {
+  constructor(type, payload) {
     this.type = type;
-    this.data = data;
+    this.payload = payload;
   }
 
-  static fromClientData(data) {
+  static fromClientData(raw) {
     let parsed;
 
     try {
-      parsed = JSON.parse(data);
+      parsed = JSON.parse(raw);
     } catch (e) {
-      console.error(`Error: message not valid JSON\n${data}`);
+      console.error(`Error: message not valid JSON\n${raw}`);
       return null;
     }
 
-    return new Request(parsed.type);
-  }
-
-  toString() {
-    JSON.stringify({
-      type: this.type,
-      data: this.data,
-    });
+    return new Request(parsed.type, parsed.payload);
   }
 }
 

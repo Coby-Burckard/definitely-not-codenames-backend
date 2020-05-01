@@ -1,23 +1,35 @@
-const WebSocket = require("ws");
+const WebSocket = require('ws');
 
-const handleRequest = require("./app/parsers/handleRequest");
+const Response = require('./app/features/Response');
+const User = require('./app/features/User');
+
+const handleRequest = require('./app/parsers/handleRequest');
 
 // intializing websocket
 const PORT = process.env.WS_PORT || 8080;
 const wss = new WebSocket.Server({ port: PORT });
 console.log(`Starting server on port ${PORT}`);
 
-//initializing memory
-const clients = [];
-
 const app = {
   rooms: new Map(),
+  users: new Map(),
 };
 
-wss.on("connection", (ws) => {
-  console.log("New connection");
+wss.on('connection', ws => {
+  console.log('New connection. Creating user...');
 
-  clients.push(ws);
+  const user = User.createWithConnection(ws);
+  app.users.set(user.id, user);
 
-  ws.on("message", handleRequest(app, ws));
+  // Send user id to client
+  ws.send(
+    Response.fromObject({
+      type: 'USER_CREATED',
+      payload: {
+        id: user.id,
+      },
+    })
+  );
+
+  ws.on('message', handleRequest(app, ws, user));
 });
