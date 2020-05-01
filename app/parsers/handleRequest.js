@@ -1,7 +1,7 @@
-const Request = require('./Request');
-const Room = require('./Room');
+const Request = require("../features/Request");
+const Room = require("../features/Room");
 
-const handleRequest = ({ rooms }, ws) => clientData => {
+const handleRequest = ({ rooms }, ws) => (clientData) => {
   const request = Request.fromClientData(clientData);
 
   if (!request) {
@@ -9,20 +9,20 @@ const handleRequest = ({ rooms }, ws) => clientData => {
     return;
   }
 
-  if (request.type === 'CREATE_ROOM') {
+  if (request.type === "CREATE_ROOM") {
     const newRoom = new Room();
 
     const roomId = newRoom.id;
     rooms.set(newRoom.id, newRoom);
 
-    console.log('created room', roomId);
+    console.log("created room", roomId);
 
-    const message = JSON.stringify({
-      type: 'ROOM_CREATED',
+    const payload = JSON.stringify({
+      type: "ROOM_CREATED",
       payload: { id: roomId },
     });
 
-    ws.send(message);
+    ws.send(payload);
   }
 };
 
