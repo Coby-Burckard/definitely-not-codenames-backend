@@ -1,7 +1,7 @@
 class Feed {
   constructor() {
-    this.messages = ['Default']
+    this.messages = ['Default'];
   }
 }
 
-module.exports = Feed
+module.exports = Feed;

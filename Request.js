@@ -1,21 +1,28 @@
 class Request {
   constructor(type, data) {
-    this.type = type
-    this.data = data
+    this.type = type;
+    this.data = data;
   }
 
   static fromClientData(data) {
-    const parsed = JSON.parse(data)
+    let parsed;
 
-    return new Request(parsed.type)
+    try {
+      parsed = JSON.parse(data);
+    } catch (e) {
+      console.error(`Error: message not valid JSON\n${data}`);
+      return null;
+    }
+
+    return new Request(parsed.type);
   }
 
   toString() {
     JSON.stringify({
       type: this.type,
-      data: this.data
-    })
+      data: this.data,
+    });
   }
 }
 
-module.exports = Request
+module.exports = Request;
