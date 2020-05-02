@@ -67,6 +67,26 @@ const handleRequest = (app, ws, user) => clientData => {
         });
       }
       break;
+    case 'ASSIGN_TEAM':
+      {
+        const { team } = request.payload;
+
+        if (!team) {
+          ws.send(Response.error('32'));
+          break;
+        }
+      }
+      break;
+    case 'ASSIGN_ROLE':
+      {
+        const { role } = request.payload;
+
+        if (!role) {
+          ws.send(Response.error('98'));
+          break;
+        }
+      }
+      break;
     default:
   }
 };
