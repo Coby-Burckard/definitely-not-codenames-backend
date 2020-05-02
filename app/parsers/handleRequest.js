@@ -40,7 +40,10 @@ const handleRequest = (app, ws, user) => clientData => {
         existingRoom.users.add(user.id);
         user.roomID = existingRoom.id;
 
-        existingRoom.sendToUsers(Array.from(existingRoom.users), app);
+        existingRoom.sendObjectToUsers(app, {
+          type: 'ROOM_USERS_UPDATED',
+          payload: { users: Array.from(existingRoom.users) },
+        });
 
         console.log('Added user to room:', user.id);
       }
@@ -60,15 +63,9 @@ const handleRequest = (app, ws, user) => clientData => {
         room.feed.addMessage(message);
 
         console.log(JSON.stringify(room, null, 2));
-        room.users.forEach(userID => {
-          console.log('sending to:', userID);
-          const roomUserConnection = app.users.get(userID).connection;
-          roomUserConnection.send(
-            Response.fromObject({
-              type: 'MESSAGE_RECEIVED',
-              payload: { message },
-            })
-          );
+        room.sendObjectToUsers(app, {
+          type: 'MESSAGE_RECEIVED',
+          payload: { message },
         });
       }
       break;

@@ -11,15 +11,10 @@ class Room {
     this.users = new Set();
   }
 
-  sendToUsers(data, app) {
+  sendObjectToUsers(app, response) {
     this.users.forEach(userID => {
       const roomUserConnection = app.users.get(userID).connection;
-      roomUserConnection.send(
-        Response.fromObject({
-          type: 'ROOM_USERS_UPDATED',
-          payload: { data },
-        })
-      );
+      roomUserConnection.send(Response.fromObject(response));
     });
   }
 }

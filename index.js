@@ -4,6 +4,7 @@ const Response = require('./app/features/Response');
 const User = require('./app/features/User');
 
 const handleRequest = require('./app/parsers/handleRequest');
+const handleClose = require('./app/parsers/handleClose');
 
 // intializing websocket
 const PORT = process.env.WS_PORT || 8080;
@@ -15,7 +16,7 @@ const app = {
   users: new Map(),
 };
 
-wss.on('connection', (ws) => {
+wss.on('connection', ws => {
   console.log('New connection. Creating user...');
 
   const user = User.createWithConnection(ws);
@@ -32,4 +33,6 @@ wss.on('connection', (ws) => {
   );
 
   ws.on('message', handleRequest(app, ws, user));
+
+  ws.on('close', handleClose(app, ws, user));
 });
