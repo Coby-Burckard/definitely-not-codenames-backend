@@ -40,6 +40,8 @@ const handleRequest = (app, ws, user) => clientData => {
         existingRoom.users.add(user.id);
         user.roomID = existingRoom.id;
 
+        existingRoom.sendToUsers(Array.from(existingRoom.users), app);
+
         console.log('Added user to room:', user.id);
       }
       break;

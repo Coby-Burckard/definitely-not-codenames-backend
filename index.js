@@ -15,7 +15,7 @@ const app = {
   users: new Map(),
 };
 
-wss.on('connection', ws => {
+wss.on('connection', (ws) => {
   console.log('New connection. Creating user...');
 
   const user = User.createWithConnection(ws);
