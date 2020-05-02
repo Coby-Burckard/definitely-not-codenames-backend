@@ -1,6 +1,7 @@
 const Request = require('../features/Request');
 const Room = require('../features/Room');
 const Response = require('../features/Response');
+const GameUser = require('../features/GameUser');
 
 const handleRequest = (app, ws, user) => clientData => {
   const request = Request.fromClientData(clientData);
@@ -37,13 +38,10 @@ const handleRequest = (app, ws, user) => clientData => {
           break;
         }
 
-        existingRoom.users.add(user.id);
+        existingRoom.users.set(user.id, GameUser.createWithID(user.id));
         user.roomID = existingRoom.id;
 
-        existingRoom.sendObjectToUsers(app, {
-          type: 'ROOM_USERS_UPDATED',
-          payload: { users: Array.from(existingRoom.users) },
-        });
+        existingRoom.sendGameUsersToRoom(app);
 
         console.log('Added user to room:', user.id);
       }

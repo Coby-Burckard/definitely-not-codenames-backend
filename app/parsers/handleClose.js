@@ -6,10 +6,7 @@ const handleClose = (app, ws, user) => () => {
     const room = app.rooms.get(user.roomID);
     room.users.delete(user.id);
 
-    room.sendObjectToUsers(app, {
-      type: 'ROOM_USERS_UPDATED',
-      payload: { users: Array.from(room.users) },
-    });
+    room.sendGameUsersToRoom(app);
   }
 
   // removing user from app memory
