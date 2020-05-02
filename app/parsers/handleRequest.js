@@ -3,7 +3,7 @@ const Room = require('../features/Room');
 const Response = require('../features/Response');
 const GameUser = require('../features/GameUser');
 
-const handleRequest = (app, ws, user) => clientData => {
+const handleRequest = (app, ws, requestUser) => clientData => {
   const request = Request.fromClientData(clientData);
 
   if (!request) {
@@ -17,9 +17,7 @@ const handleRequest = (app, ws, user) => clientData => {
         const newRoom = new Room();
         app.rooms.set(newRoom.id, newRoom);
 
-        console.log('created room', newRoom.id);
-
-        user.roomID = newRoom.id;
+        requestUser.roomID = newRoom.id;
 
         ws.send(
           Response.fromObject({
@@ -27,35 +25,39 @@ const handleRequest = (app, ws, user) => clientData => {
             payload: { id: newRoom.id },
           })
         );
+
+        console.log('Room created: ', newRoom.id);
       }
       break;
     case 'JOIN_ROOM':
       {
         const existingRoom = app.rooms.get(request.payload.id);
-
         if (!existingRoom) {
-          ws.send(Response.error('404'));
+          ws.send(Response.error('Room not found'));
           break;
         }
 
-        existingRoom.users.set(user.id, GameUser.createWithID(user.id));
-        user.roomID = existingRoom.id;
+        existingRoom.users.set(
+          requestUser.id,
+          GameUser.createWithID(requestUser.id)
+        );
+
+        requestUser.roomID = existingRoom.id; // Yes, you can only be in one room
 
         existingRoom.sendGameUsersToRoom(app);
 
-        console.log('Added user to room:', user.id);
+        console.log('User added to room: ', requestUser.id);
       }
       break;
     case 'SEND_MESSAGE':
       {
-        const room = app.rooms.get(user.roomID);
-
         const { message } = request.payload;
-
         if (!message) {
-          ws.send(Response.error('30'));
+          ws.send(Response.error('No message to send'));
           break;
         }
+
+        const room = app.rooms.get(requestUser.roomID);
 
         // Doesn't do anything right now
         room.feed.addMessage(message);
@@ -70,21 +72,41 @@ const handleRequest = (app, ws, user) => clientData => {
     case 'ASSIGN_TEAM':
       {
         const { team } = request.payload;
-
-        if (!team) {
-          ws.send(Response.error('32'));
+        if (!team || !GameUser.hasTeam(team)) {
+          ws.send(Response.error('Team color not found'));
           break;
         }
+
+        const room = app.rooms.get(requestUser.roomID);
+        if (!room) {
+          ws.send(Response.error('Room not found'));
+          break;
+        }
+
+        const gameUser = room.users.get(requestUser.id);
+        gameUser.assignTeam(team);
+
+        room.sendGameUsersToRoom(app);
       }
       break;
     case 'ASSIGN_ROLE':
       {
         const { role } = request.payload;
-
         if (!role) {
-          ws.send(Response.error('98'));
+          ws.send(Response.error('Role not found'));
           break;
         }
+
+        const room = app.rooms.get(requestUser.roomID);
+        if (!room) {
+          ws.send(Response.error('Room not found'));
+          break;
+        }
+
+        const gameUser = room.users.get(requestUser.id);
+        gameUser.assignRole(role);
+
+        room.sendGameUsersToRoom(app);
       }
       break;
     default:
