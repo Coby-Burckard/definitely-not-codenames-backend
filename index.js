@@ -7,7 +7,7 @@ const handleRequest = require('./app/parsers/handleRequest');
 const handleClose = require('./app/parsers/handleClose');
 
 // intializing websocket
-const PORT = 80;
+const PORT = process.env.WS_PORT || 8080;
 const wss = new WebSocket.Server({ port: PORT });
 console.log(`Starting server on port ${PORT}`);
 
