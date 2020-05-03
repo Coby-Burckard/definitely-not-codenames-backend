@@ -16,7 +16,7 @@ const server = express()
     console.log('express listening on port', PORT);
   });
 
-// intializing websocket
+// intializ ing websocket
 const wss = new WebSocket.Server({ server });
 console.log(`Starting server on port ${PORT}`);
 

@@ -27,7 +27,7 @@ class GameUser {
     return roles.has(role);
   }
 
-  setName(name) {
+  assignName(name) {
     this.name = name;
   }
 

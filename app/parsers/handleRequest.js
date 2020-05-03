@@ -109,6 +109,20 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         room.sendGameUsersToRoom(app);
       }
       break;
+    case 'ASSIGN_NAME': {
+      const { name } = request.payload;
+      if (!name) {
+        ws.send(Response.error('Name not submitted'));
+        break;
+      }
+
+      const room = app.rooms.get(requestUser.roomID);
+      const gameUser = room.users.get(requestUser.id);
+      gameUser.assignName(name);
+
+      room.sendGameUsersToRoom(app);
+      break;
+    }
     default:
   }
 };
