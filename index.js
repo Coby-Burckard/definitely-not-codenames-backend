@@ -9,7 +9,7 @@ const handleClose = require('./app/parsers/handleClose');
 
 // initializing express server
 const PORT = process.env.PORT || 8080;
-const INDEX = '/index.js';
+const INDEX = '/index.html';
 const server = express()
   .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
   .listen(PORT, () => {
