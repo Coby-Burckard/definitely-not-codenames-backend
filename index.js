@@ -1,4 +1,5 @@
 const WebSocket = require('ws');
+const express = require('express');
 
 const Response = require('./app/features/Response');
 const User = require('./app/features/User');
@@ -6,9 +7,17 @@ const User = require('./app/features/User');
 const handleRequest = require('./app/parsers/handleRequest');
 const handleClose = require('./app/parsers/handleClose');
 
+// initializing express server
+const PORT = process.env.PORT || 8080;
+const INDEX = '/index.js';
+const server = express()
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .listen(PORT, () => {
+    console.log('express listening on port', PORT);
+  });
+
 // intializing websocket
-const PORT = process.env.WS_PORT || 8080;
-const wss = new WebSocket.Server({ port: PORT });
+const wss = new WebSocket.Server({ server });
 console.log(`Starting server on port ${PORT}`);
 
 const app = {
