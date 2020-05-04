@@ -6,6 +6,9 @@ const BLACK = 'BLACK';
 const GUESSER = 'GUESSER';
 const MASTER = 'MASTER';
 
+const HINTING = 'HINTING';
+const GUESSING = 'GUESSING';
+
 module.exports = {
   RED,
   BLUE,
@@ -13,4 +16,6 @@ module.exports = {
   BLACK,
   GUESSER,
   MASTER,
+  HINTING,
+  GUESSING,
 };

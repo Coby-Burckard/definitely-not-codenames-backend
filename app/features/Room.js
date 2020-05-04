@@ -34,33 +34,6 @@ class Room {
     });
   }
 
-  allRolesFilled() {
-    let redMaster = false;
-    let redGuesser = false;
-    let blueMaster = false;
-    let blueGuesser = false;
-
-    this.users.forEach(gameUser => {
-      if (gameUser.team === RED && gameUser.role === MASTER) {
-        redMaster = true;
-      }
-
-      if (gameUser.team === RED && gameUser.role === GUESSER) {
-        redGuesser = true;
-      }
-
-      if (gameUser.team === BLUE && gameUser.role === MASTER) {
-        blueMaster = true;
-      }
-
-      if (gameUser.team === BLUE && gameUser.role === GUESSER) {
-        blueGuesser = true;
-      }
-    });
-
-    return redMaster && redGuesser && blueMaster && blueGuesser;
-  }
-
   sendGameStateToRoom(app) {
     this.sendObjectToUsers(app, {
       type: 'GAME_STATE_UPDATED',

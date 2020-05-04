@@ -1,14 +1,15 @@
 const Card = require('./Card');
 const { words } = require('./words.json');
-const { RED, BLUE, WHITE, BLACK } = require('./constants');
+const { RED, BLUE, WHITE, BLACK, HINTING, GUESSING } = require('./constants');
 
 class Game {
   constructor() {
     this.cards = null;
     this.turnColor = null;
-    this.hintWord = null;
-    this.max = null;
-    this.guessed = null;
+    this.mode = null;
+    this.clueWord = null;
+    this.clueNumber = null;
+    this.gussedCount = null;
   }
 
   initialize() {
@@ -36,6 +37,8 @@ class Game {
       .sort(() => 0.5 - Math.random());
 
     this.turnColor = RED;
+    this.mode = HINTING;
+    this.gussedCount = 0;
   }
 
   toggleTurnColor() {
@@ -62,9 +65,10 @@ class Game {
     return {
       cards: cardsAsObjects,
       turnColor: this.turnColor,
-      hintWord: this.hintWord,
-      max: this.max,
-      guessed: this.guessed,
+      mode: this.mode,
+      clueWord: this.clueWord,
+      clueNumber: this.clueNumber,
+      gussedCount: this.gussedCount,
     };
   }
 }
