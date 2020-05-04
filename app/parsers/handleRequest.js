@@ -116,6 +116,11 @@ const handleRequest = (app, ws, requestUser) => clientData => {
       }
 
       const room = app.rooms.get(requestUser.roomID);
+      if (!room) {
+        ws.send(Response.error('Room not found'));
+        break;
+      }
+
       const gameUser = room.users.get(requestUser.id);
       gameUser.assignName(name);
 
@@ -130,6 +135,7 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         return;
       }
 
+      console.log('All roles filled - starting game');
       const { game } = room;
       game.initialize();
 

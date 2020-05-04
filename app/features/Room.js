@@ -41,20 +41,20 @@ class Room {
     let blueGuesser = false;
 
     this.users.forEach(gameUser => {
-      if (gameUser.color === RED && gameUser.role === MASTER) {
-        return (redMaster = true);
+      if (gameUser.team === RED && gameUser.role === MASTER) {
+        redMaster = true;
       }
 
-      if (gameUser.color === RED && gameUser.role === GUESSER) {
-        return (redGuesser = true);
+      if (gameUser.team === RED && gameUser.role === GUESSER) {
+        redGuesser = true;
       }
 
-      if (gameUser.color === BLUE && gameUser.role === MASTER) {
-        return (blueMaster = true);
+      if (gameUser.team === BLUE && gameUser.role === MASTER) {
+        blueMaster = true;
       }
 
-      if (gameUser.color === BLUE && gameUser.role === GUESSER) {
-        return (blueGuesser = true);
+      if (gameUser.team === BLUE && gameUser.role === GUESSER) {
+        blueGuesser = true;
       }
     });
 
