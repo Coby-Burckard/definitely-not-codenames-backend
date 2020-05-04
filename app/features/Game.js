@@ -5,8 +5,10 @@ const { RED, BLUE, WHITE, BLACK, HINTING, GUESSING } = require('./constants');
 class Game {
   constructor() {
     this.cards = null;
-    this.turnColor = null;
+
     this.mode = null;
+    this.turnColor = null;
+
     this.clueWord = null;
     this.clueNumber = null;
     this.gussedCount = null;
@@ -49,9 +51,13 @@ class Game {
     return (this.turnColor = RED);
   }
 
-  setHint(hintWord, count) {
-    this.hintWord = hintWord;
-    this.max = count + 1;
+  toggleModeGuessing() {
+    this.mode = GUESSING;
+  }
+
+  setClueWordAndNumber(clueWord, clueNumber) {
+    this.clueWord = clueWord;
+    this.clueNumber = clueNumber;
   }
 
   touch(cardIndex) {

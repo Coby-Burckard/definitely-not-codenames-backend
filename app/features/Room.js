@@ -1,7 +1,5 @@
 const uid = require('uid-safe');
 
-const { RED, BLUE, GUESSER, MASTER } = require('./constants');
-
 const Feed = require('./Feed');
 const Game = require('./Game');
 

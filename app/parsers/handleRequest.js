@@ -148,7 +148,7 @@ const handleRequest = (app, ws, requestUser) => clientData => {
       );
       if (!isValid) {
         ws.send(Response.error('CLICK_CARD payload not valid'));
-        return;
+        break;
       }
 
       // obtaining game variables
@@ -161,6 +161,32 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         game.touch(i);
         room.sendGameStateToRoom(app);
       }
+      break;
+    }
+
+    case 'SET_CLUE': {
+      const { payload } = request;
+      const {
+        isValid,
+        clueWord,
+        clueNumber,
+      } = payloadValidators.setCluePayload(payload);
+
+      if (!isValid) {
+        ws.send(Response.error('SET_CLUE payload not valid'));
+        break;
+      }
+
+      const room = app.rooms.get(requestUser.roomID);
+      const gameUser = room.users.get(requestUser.id);
+      const { game } = room;
+
+      if (gameValidators.setClueValid(game, gameUser)) {
+        game.setClueWordAndNumber(clueWord, clueNumber);
+        game.toggleModeGuessing();
+        room.sendGameStateToRoom(app);
+      }
+
       break;
     }
     default:

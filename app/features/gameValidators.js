@@ -1,4 +1,4 @@
-const { GUESSER, MASTER, RED, BLUE } = require('./constants');
+const { GUESSER, MASTER, RED, BLUE, HINTING } = require('./constants');
 
 const clickCardValid = (game, gameUser, cardIndex) => {
   const { turnColor } = game;
@@ -40,4 +40,11 @@ const startGameValid = room => {
   return redMaster && redGuesser && blueMaster && blueGuesser;
 };
 
-module.exports = { clickCardValid, startGameValid };
+const setClueValid = (game, gameUser) => {
+  const { mode, turnColor } = game;
+  const { team, role } = gameUser;
+
+  return mode === HINTING && turnColor === team && role === MASTER;
+};
+
+module.exports = { clickCardValid, startGameValid, setClueValid };
