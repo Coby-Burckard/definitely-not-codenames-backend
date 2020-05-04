@@ -62,7 +62,6 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         // Doesn't do anything right now
         room.feed.addMessage(message);
 
-        console.log(JSON.stringify(room, null, 2));
         room.sendObjectToUsers(app, {
           type: 'MESSAGE_RECEIVED',
           payload: { message },
