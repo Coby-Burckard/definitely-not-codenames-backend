@@ -2,6 +2,7 @@ const Request = require('../features/Request');
 const Room = require('../features/Room');
 const Response = require('../features/Response');
 const GameUser = require('../features/GameUser');
+const { GUESSER, MASTER, RED, BLUE } = require('../features/constants');
 
 const handleRequest = (app, ws, requestUser) => clientData => {
   const request = Request.fromClientData(clientData);
@@ -130,16 +131,42 @@ const handleRequest = (app, ws, requestUser) => clientData => {
     case 'START_GAME': {
       const room = app.rooms.get(requestUser.roomID);
 
-      if (!room.allRolesFilled()) {
-        console.log('Not all roles filled - not starting game');
-        return;
-      }
+      // if (!room.allRolesFilled()) {
+      //   console.log('Not all roles filled - not starting game');
+      //   return;
+      // }
 
       console.log('All roles filled - starting game');
       const { game } = room;
       game.initialize();
 
       room.sendGameStateToRoom(app);
+      break;
+    }
+    case 'CLICK_CARD': {
+      // validating request
+      const { i } = request.payload;
+
+      if (typeof i !== 'number') {
+        console.log('invalid payload for CLICKED_CARD request');
+        return;
+      }
+
+      // obtaining game variables
+      const room = app.rooms.get(requestUser.roomID);
+      const gameUser = room.users.get(requestUser.id);
+      const { game, users } = room;
+      const card = game.cards[i];
+
+      // validating click
+      if (
+        game.turnColor === gameUser.team &&
+        gameUser.role === GUESSER &&
+        !card.touched
+      ) {
+        game.touch(i);
+        room.sendGameStateToRoom(app);
+      }
       break;
     }
     default:

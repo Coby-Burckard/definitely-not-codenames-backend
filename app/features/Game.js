@@ -51,9 +51,7 @@ class Game {
     this.max = count + 1;
   }
 
-  touch(teamColor, cardIndex) {
-    if (teamColor !== this.turnColor) return;
-
+  touch(cardIndex) {
     const card = this.cards[cardIndex];
     card.touch();
   }
