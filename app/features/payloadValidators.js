@@ -1,6 +1,6 @@
 const clickCardPayload = payload => {
   const { i } = payload;
-  if (!i || typeof i !== 'number') {
+  if (typeof i !== 'number') {
     return { i: null, isValid: false };
   }
 
