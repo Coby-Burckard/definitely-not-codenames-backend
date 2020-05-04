@@ -4,8 +4,6 @@ const express = require('express');
 const Response = require('./app/features/Response');
 const User = require('./app/features/User');
 
-const { words } = require('./app/words.json');
-
 const handleRequest = require('./app/parsers/handleRequest');
 const handleClose = require('./app/parsers/handleClose');
 

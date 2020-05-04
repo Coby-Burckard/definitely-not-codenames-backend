@@ -122,6 +122,20 @@ const handleRequest = (app, ws, requestUser) => clientData => {
       room.sendGameUsersToRoom(app);
       break;
     }
+    case 'START_GAME': {
+      const room = app.rooms.get(requestUser.roomID);
+
+      if (!room.allRolesFilled()) {
+        console.log('Not all roles filled - not starting game');
+        return;
+      }
+
+      const { game } = room;
+      game.initialize();
+
+      room.sendGameStateToRoom(app);
+      break;
+    }
     default:
   }
 };
