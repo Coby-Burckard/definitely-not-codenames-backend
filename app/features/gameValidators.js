@@ -22,6 +22,17 @@ const clickCardValid = (game, gameUser, cardIndex) => {
   );
 };
 
+const clickPassValid = (game, gameUser) => {
+  const { turnColor, mode } = game;
+  const { team, role } = gameUser;
+
+  if (!team || !role || !turnColor || !mode) {
+    return false;
+  }
+
+  return turnColor === team && role === GUESSER && mode === GUESSING;
+};
+
 const startGameValid = room => {
   let redMaster = false;
   let redGuesser = false;
@@ -56,4 +67,9 @@ const setClueValid = (game, gameUser) => {
   return mode === HINTING && turnColor === team && role === MASTER;
 };
 
-module.exports = { clickCardValid, startGameValid, setClueValid };
+module.exports = {
+  clickCardValid,
+  clickPassValid,
+  startGameValid,
+  setClueValid,
+};

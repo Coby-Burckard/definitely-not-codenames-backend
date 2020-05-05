@@ -159,11 +159,24 @@ const handleRequest = (app, ws, requestUser) => clientData => {
       // validating click
       if (gameValidators.clickCardValid(game, gameUser, i)) {
         game.touch(i);
+
         room.sendGameStateToRoom(app);
       }
       break;
     }
+    case 'CLICK_PASS': {
+      const room = app.rooms.get(requestUser.roomID);
+      const gameUser = room.users.get(requestUser.id);
+      const { game } = room;
 
+      if (gameValidators.clickPassValid(game, gameUser)) {
+        game.pass();
+
+        room.sendGameStateToRoom(app);
+      }
+
+      break;
+    }
     case 'SET_CLUE': {
       const { payload } = request;
       const {
@@ -184,6 +197,7 @@ const handleRequest = (app, ws, requestUser) => clientData => {
       if (gameValidators.setClueValid(game, gameUser)) {
         game.setClueWordAndNumber(clueWord, clueNumber);
         game.toggleModeGuessing();
+
         room.sendGameStateToRoom(app);
       }
 

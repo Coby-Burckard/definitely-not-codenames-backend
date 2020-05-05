@@ -11,6 +11,7 @@ class Game {
 
     this.clueWord = null;
     this.clueNumber = null;
+
     this.gussedCount = null;
   }
 
@@ -53,6 +54,17 @@ class Game {
 
   toggleModeGuessing() {
     this.mode = GUESSING;
+    this.gussedCount = 0;
+  }
+
+  toggleModeHinting() {
+    this.mode = HINTING;
+    this.gussedCount = null;
+  }
+
+  clearClue() {
+    this.clueWord = null;
+    this.clueNumber = null;
   }
 
   setClueWordAndNumber(clueWord, clueNumber) {
@@ -62,7 +74,40 @@ class Game {
 
   touch(cardIndex) {
     const card = this.cards[cardIndex];
-    card.touch();
+
+    const maxGuesses = this.clueNumber + 1;
+    this.gussedCount += 1;
+
+    const touchedColor = card.touch();
+
+    if (touchedColor === this.turnColor && this.gussedCount < maxGuesses) {
+      return;
+    }
+
+    if (touchedColor === this.turnColor && this.gussedCount === maxGuesses) {
+      this.toggleModeHinting();
+      this.clearClue();
+      return this.toggleTurnColor();
+    }
+
+    if (touchedColor === WHITE || touchedColor !== this.turnColor) {
+      this.toggleModeHinting();
+      this.clearClue();
+      return this.toggleTurnColor();
+    }
+
+    if (touchedColor === BLACK) {
+      // FIXME: This should end the game
+      this.toggleModeHinting();
+      this.clearClue();
+      return this.toggleTurnColor();
+    }
+  }
+
+  pass() {
+    this.toggleModeHinting();
+    this.clearClue();
+    return this.toggleTurnColor();
   }
 
   currentGameState() {
