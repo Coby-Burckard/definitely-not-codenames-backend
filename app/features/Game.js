@@ -165,6 +165,8 @@ class Game {
       clueWord: this.clueWord,
       clueNumber: this.clueNumber,
       guessedCount: this.guessedCount,
+      redClickedCount: this.redClickedCount,
+      blueClickedCount: this.blueClickedCount,
     };
   }
 }
