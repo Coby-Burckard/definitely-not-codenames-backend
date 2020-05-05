@@ -4,6 +4,7 @@ const { RED, BLUE, WHITE, BLACK, HINTING, GUESSING } = require('./constants');
 
 class Game {
   constructor() {
+    this.started = false;
     this.cards = [];
 
     this.mode = null;
@@ -19,6 +20,7 @@ class Game {
   }
 
   initialize() {
+    this.started = true;
     const randomWords = words
       .slice()
       .sort(() => 0.5 - Math.random())
@@ -164,6 +166,7 @@ class Game {
     const cardsAsObjects = this.cards.map(card => card.asObject());
 
     return {
+      started: this.started,
       cards: cardsAsObjects,
       turnColor: this.turnColor,
       mode: this.mode,
