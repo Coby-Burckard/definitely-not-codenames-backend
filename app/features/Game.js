@@ -88,7 +88,6 @@ class Game {
   touch(cardIndex) {
     const card = this.cards[cardIndex];
 
-    const maxGuesses = this.clueNumber + 1;
     this.guessedCount += 1;
 
     const touchedColor = card.touch();
@@ -126,10 +125,16 @@ class Game {
     }
 
     if (touchedColor === BLACK) {
-      // FIXME: This should end the game
       this.toggleModeWon(this.turnColor === RED ? BLUE : RED);
       this.clearClue();
       return;
+    }
+
+    let maxGuesses;
+    if (this.clueNumber === -1 || this.clueNumber === 0) {
+      maxGuesses = 26; // "infinite" - 25 keeps the logic easy
+    } else {
+      maxGuesses = this.clueNumber + 1;
     }
 
     if (touchedColor === this.turnColor && this.guessedCount < maxGuesses) {

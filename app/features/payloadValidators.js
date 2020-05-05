@@ -14,7 +14,9 @@ const setCluePayload = payload => {
     return { isValid: false };
   }
 
-  if (clueNumber < 0 || clueNumber > 25) {
+  // 9 is max since there's only ever 9 cards for a color
+  // -1 and 0 are allowed and correspond to infinte guesses
+  if (clueNumber < -1 || clueNumber > 9 || !Number.isInteger(clueNumber)) {
     return { isValid: false };
   }
 
