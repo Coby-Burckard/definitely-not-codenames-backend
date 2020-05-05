@@ -132,6 +132,7 @@ const handleRequest = (app, ws, requestUser) => clientData => {
     case 'START_GAME': {
       const room = app.rooms.get(requestUser.roomID);
 
+      // FIXME: make sure to validate game
       // if (gameValidators.startGameValid(room)) {
       if (true) {
         const { game } = room;
@@ -140,6 +141,13 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         room.sendGameStateToRoom(app);
       }
 
+      break;
+    }
+    case 'START_NEW_GAME': {
+      const room = app.rooms.get(requestUser.roomID);
+
+      room.newBlankGame();
+      room.sendGameStateToRoom(app);
       break;
     }
     case 'CLICK_CARD': {

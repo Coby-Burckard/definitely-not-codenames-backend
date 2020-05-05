@@ -13,6 +13,10 @@ class Room {
     this.game = new Game();
   }
 
+  newBlankGame() {
+    this.game = new Game();
+  }
+
   sendObjectToUsers(app, response) {
     this.users.forEach((gameUser, userID) => {
       const roomUserConnection = app.users.get(userID).connection;

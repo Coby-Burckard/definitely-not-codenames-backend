@@ -6,6 +6,7 @@ const BLACK = 'BLACK';
 const GUESSER = 'GUESSER';
 const MASTER = 'MASTER';
 
+// game "modes"
 const HINTING = 'HINTING';
 const GUESSING = 'GUESSING';
 

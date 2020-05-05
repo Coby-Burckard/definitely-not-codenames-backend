@@ -4,7 +4,7 @@ const { RED, BLUE, WHITE, BLACK, HINTING, GUESSING } = require('./constants');
 
 class Game {
   constructor() {
-    this.cards = null;
+    this.cards = [];
 
     this.mode = null;
     this.turnColor = null;
@@ -13,6 +13,9 @@ class Game {
     this.clueNumber = null;
 
     this.guessedCount = null;
+
+    this.redClickedCount = 0;
+    this.blueClickedCount = 0;
   }
 
   initialize() {
@@ -62,6 +65,16 @@ class Game {
     this.guessedCount = null;
   }
 
+  toggleModeWon(winner) {
+    if (winner === RED) {
+      this.mode = RED;
+    }
+
+    if (winner === BLUE) {
+      this.mode = BLUE;
+    }
+  }
+
   clearClue() {
     this.clueWord = null;
     this.clueNumber = null;
@@ -80,6 +93,45 @@ class Game {
 
     const touchedColor = card.touch();
 
+    // check for game end here
+    const { redTouched, blueTouched } = this.cards.reduce(
+      (acc, currentCard) => {
+        if (currentCard.touched && currentCard.color === RED) {
+          acc.redTouched += 1;
+        }
+
+        if (currentCard.touched && currentCard.color === BLUE) {
+          acc.blueTouched += 1;
+        }
+
+        return acc;
+      },
+      {
+        redTouched: 0,
+        blueTouched: 0,
+      }
+    );
+
+    this.redClickedCount = redTouched;
+    this.blueClickedCount = blueTouched;
+
+    if (redTouched === 9) {
+      this.toggleModeWon(RED);
+      return;
+    }
+
+    if (blueTouched === 8) {
+      this.toggleModeWon(BLUE);
+      return;
+    }
+
+    if (touchedColor === BLACK) {
+      // FIXME: This should end the game
+      this.toggleModeWon(this.turnColor === RED ? BLUE : RED);
+      this.clearClue();
+      return;
+    }
+
     if (touchedColor === this.turnColor && this.guessedCount < maxGuesses) {
       return;
     }
@@ -91,13 +143,6 @@ class Game {
     }
 
     if (touchedColor === WHITE || touchedColor !== this.turnColor) {
-      this.toggleModeHinting();
-      this.clearClue();
-      return this.toggleTurnColor();
-    }
-
-    if (touchedColor === BLACK) {
-      // FIXME: This should end the game
       this.toggleModeHinting();
       this.clearClue();
       return this.toggleTurnColor();
