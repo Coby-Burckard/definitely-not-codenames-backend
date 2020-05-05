@@ -12,7 +12,7 @@ class Game {
     this.clueWord = null;
     this.clueNumber = null;
 
-    this.gussedCount = null;
+    this.guessedCount = null;
   }
 
   initialize() {
@@ -41,7 +41,7 @@ class Game {
 
     this.turnColor = RED;
     this.mode = HINTING;
-    this.gussedCount = 0;
+    this.guessedCount = 0;
   }
 
   toggleTurnColor() {
@@ -54,12 +54,12 @@ class Game {
 
   toggleModeGuessing() {
     this.mode = GUESSING;
-    this.gussedCount = 0;
+    this.guessedCount = 0;
   }
 
   toggleModeHinting() {
     this.mode = HINTING;
-    this.gussedCount = null;
+    this.guessedCount = null;
   }
 
   clearClue() {
@@ -76,15 +76,15 @@ class Game {
     const card = this.cards[cardIndex];
 
     const maxGuesses = this.clueNumber + 1;
-    this.gussedCount += 1;
+    this.guessedCount += 1;
 
     const touchedColor = card.touch();
 
-    if (touchedColor === this.turnColor && this.gussedCount < maxGuesses) {
+    if (touchedColor === this.turnColor && this.guessedCount < maxGuesses) {
       return;
     }
 
-    if (touchedColor === this.turnColor && this.gussedCount === maxGuesses) {
+    if (touchedColor === this.turnColor && this.guessedCount === maxGuesses) {
       this.toggleModeHinting();
       this.clearClue();
       return this.toggleTurnColor();
@@ -119,7 +119,7 @@ class Game {
       mode: this.mode,
       clueWord: this.clueWord,
       clueNumber: this.clueNumber,
-      gussedCount: this.gussedCount,
+      guessedCount: this.guessedCount,
     };
   }
 }
