@@ -1,16 +1,25 @@
-const { GUESSER, MASTER, RED, BLUE, HINTING } = require('./constants');
+const {
+  GUESSER,
+  MASTER,
+  RED,
+  BLUE,
+  HINTING,
+  GUESSING,
+} = require('./constants');
 
 const clickCardValid = (game, gameUser, cardIndex) => {
-  const { turnColor } = game;
+  const { turnColor, mode } = game;
   const { team, role } = gameUser;
 
-  if (!team || !role || !turnColor) {
+  if (!team || !role || !turnColor || !mode) {
     return false;
   }
 
   const card = game.cards[cardIndex];
 
-  return turnColor === team && role === GUESSER && !card.touched;
+  return (
+    turnColor === team && role === GUESSER && !card.touched && mode === GUESSING
+  );
 };
 
 const startGameValid = room => {
