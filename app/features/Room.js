@@ -7,7 +7,7 @@ const Response = require('./Response');
 
 class Room {
   constructor() {
-    this.id = uid.sync(24);
+    this.id = uid.sync(8);
     this.feed = new Feed();
     this.users = new Map();
     this.game = new Game();
