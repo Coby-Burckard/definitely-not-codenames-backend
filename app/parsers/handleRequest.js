@@ -47,6 +47,7 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         requestUser.roomID = existingRoom.id; // Yes, you can only be in one room
 
         existingRoom.sendGameUsersToRoom(app);
+        existingRoom.sendGameStateToRoom(app);
 
         console.log('User added to room: ', requestUser.id);
       }
