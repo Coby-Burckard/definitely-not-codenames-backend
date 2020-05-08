@@ -61,6 +61,10 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         }
 
         const room = app.rooms.get(requestUser.roomID);
+        if (!room) {
+          ws.send(Response.error('Room not found'));
+          break;
+        }
 
         // Doesn't do anything right now
         room.feed.addMessage(message);
@@ -86,6 +90,11 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         }
 
         const gameUser = room.users.get(requestUser.id);
+        if (!gameUser) {
+          ws.send(Response.error('User not found'));
+          break;
+        }
+
         gameUser.assignTeam(team);
 
         room.sendGameUsersToRoom(app);
@@ -106,6 +115,11 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         }
 
         const gameUser = room.users.get(requestUser.id);
+        if (!gameUser) {
+          ws.send(Response.error('User not found'));
+          break;
+        }
+
         gameUser.assignRole(role);
 
         room.sendGameUsersToRoom(app);
@@ -132,11 +146,18 @@ const handleRequest = (app, ws, requestUser) => clientData => {
     }
     case 'START_GAME': {
       const room = app.rooms.get(requestUser.roomID);
+      if (!room) {
+        ws.send(Response.error('Room not found'));
+        break;
+      }
 
-      // FIXME: make sure to validate game
-      // if (gameValidators.startGameValid(room)) {
-      if (true) {
+      if (gameValidators.startGameValid(room)) {
         const { game } = room;
+        if (!game) {
+          ws.send(Response.error('Game not found'));
+          break;
+        }
+
         game.initialize();
 
         room.sendGameStateToRoom(app);
@@ -146,6 +167,10 @@ const handleRequest = (app, ws, requestUser) => clientData => {
     }
     case 'START_NEW_GAME': {
       const room = app.rooms.get(requestUser.roomID);
+      if (!room) {
+        ws.send(Response.error('Room not found'));
+        break;
+      }
 
       room.newBlankGame();
       room.sendGameStateToRoom(app);
@@ -162,8 +187,22 @@ const handleRequest = (app, ws, requestUser) => clientData => {
 
       // obtaining game variables
       const room = app.rooms.get(requestUser.roomID);
+      if (!room) {
+        ws.send(Response.error('Room not found'));
+        break;
+      }
+
       const gameUser = room.users.get(requestUser.id);
+      if (!gameUser) {
+        ws.send(Response.error('User not found'));
+        break;
+      }
+
       const { game } = room;
+      if (!game) {
+        ws.send(Response.error('Game not found'));
+        break;
+      }
 
       // validating click
       if (gameValidators.clickCardValid(game, gameUser, i)) {
@@ -175,8 +214,22 @@ const handleRequest = (app, ws, requestUser) => clientData => {
     }
     case 'CLICK_PASS': {
       const room = app.rooms.get(requestUser.roomID);
+      if (!room) {
+        ws.send(Response.error('Room not found'));
+        break;
+      }
+
       const gameUser = room.users.get(requestUser.id);
+      if (!gameUser) {
+        ws.send(Response.error('User not found'));
+        break;
+      }
+
       const { game } = room;
+      if (!game) {
+        ws.send(Response.error('Game not found'));
+        break;
+      }
 
       if (gameValidators.clickPassValid(game, gameUser)) {
         game.pass();
@@ -200,8 +253,22 @@ const handleRequest = (app, ws, requestUser) => clientData => {
       }
 
       const room = app.rooms.get(requestUser.roomID);
+      if (!room) {
+        ws.send(Response.error('Room not found'));
+        break;
+      }
+
       const gameUser = room.users.get(requestUser.id);
+      if (!gameUser) {
+        ws.send(Response.error('User not found'));
+        break;
+      }
+
       const { game } = room;
+      if (!game) {
+        ws.send(Response.error('Game not found'));
+        break;
+      }
 
       if (gameValidators.setClueValid(game, gameUser)) {
         game.setClueWordAndNumber(clueWord, clueNumber);
