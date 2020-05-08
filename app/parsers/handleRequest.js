@@ -36,7 +36,10 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         const existingRoom = app.rooms.get(request.payload.id);
         if (!existingRoom) {
           ws.send(
-            Response.error('ROOM_CHECKED', { isValid: 'room_not_valid' })
+            Response.fromObject({
+              type: 'ROOM_CHECKED',
+              payload: { isValid: 'room_not_found' },
+            })
           );
           break;
         }

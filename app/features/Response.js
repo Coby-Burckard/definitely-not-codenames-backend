@@ -10,8 +10,8 @@ class Response {
     return JSON.stringify({ type, payload });
   }
 
-  static error(type, err) {
-    return JSON.stringify({ type: type || 'ERROR', payload: { err } });
+  static error(err) {
+    return JSON.stringify({ type: 'ERROR', payload: { err } });
   }
 }
 
