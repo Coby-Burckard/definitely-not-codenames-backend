@@ -175,18 +175,15 @@ const handleRequest = (app, ws, requestUser) => clientData => {
         ws.send(Response.error('Room not found'));
         break;
       }
-
-      if (gameValidators.startGameValid(room)) {
-        const { game } = room;
-        if (!game) {
-          ws.send(Response.error('Game not found'));
-          break;
-        }
-
-        game.initialize();
-
-        room.sendGameStateToRoom(app);
+      const { game } = room;
+      if (!game) {
+        ws.send(Response.error('Game not found'));
+        break;
       }
+
+      game.initialize();
+
+      room.sendGameStateToRoom(app);
 
       break;
     }
