@@ -2,7 +2,7 @@ const uid = require('uid-safe');
 
 class User {
   constructor(connection) {
-    this.id = uid.sync(24);
+    this.id = uid.sync(8);
     this.connection = connection;
     this.roomID = null;
   }

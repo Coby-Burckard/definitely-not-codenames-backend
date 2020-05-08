@@ -31,52 +31,52 @@ const handleRequest = (app, ws, requestUser) => clientData => {
       }
       break;
     }
-    case 'CREATE_ROOM':
-      {
-        const newRoom = new Room();
-        app.rooms.set(newRoom.id, newRoom);
+    case 'CREATE_ROOM': {
+      const newRoom = new Room();
+      app.rooms.set(newRoom.id, newRoom);
 
-        requestUser.roomID = newRoom.id;
+      requestUser.roomID = newRoom.id;
 
+      ws.send(
+        Response.fromObject({
+          type: 'ROOM_CREATED',
+          payload: { id: newRoom.id },
+        })
+      );
+
+      console.log(`Room created. Room: ${newRoom.id}`);
+      break;
+    }
+    case 'JOIN_ROOM': {
+      const existingRoom = app.rooms.get(request.payload.id);
+      if (!existingRoom) {
         ws.send(
           Response.fromObject({
-            type: 'ROOM_CREATED',
-            payload: { id: newRoom.id },
+            type: 'ROOM_CHECKED',
+            payload: { isValid: 'room_not_found' },
           })
         );
-
-        console.log('Room created: ', newRoom.id);
+        break;
       }
+
+      existingRoom.users.set(
+        requestUser.id,
+        GameUser.createWithID(requestUser.id)
+      );
+
+      requestUser.roomID = existingRoom.id; // Yes, you can only be in one room
+
+      existingRoom.sendGameUsersToRoom(app);
+      existingRoom.sendGameStateToRoom(app);
+      ws.send(
+        Response.fromObject({ type: 'SET_PONG', payload: { pong: 'PING' } })
+      );
+
+      console.log(
+        `Room joined. User: ${requestUser.id} Room: ${requestUser.roomID}`
+      );
       break;
-    case 'JOIN_ROOM':
-      {
-        const existingRoom = app.rooms.get(request.payload.id);
-        if (!existingRoom) {
-          ws.send(
-            Response.fromObject({
-              type: 'ROOM_CHECKED',
-              payload: { isValid: 'room_not_found' },
-            })
-          );
-          break;
-        }
-
-        existingRoom.users.set(
-          requestUser.id,
-          GameUser.createWithID(requestUser.id)
-        );
-
-        requestUser.roomID = existingRoom.id; // Yes, you can only be in one room
-
-        existingRoom.sendGameUsersToRoom(app);
-        existingRoom.sendGameStateToRoom(app);
-        ws.send(
-          Response.fromObject({ type: 'SET_PONG', payload: { pong: 'PING' } })
-        );
-
-        console.log('User added to room: ', requestUser.id);
-      }
-      break;
+    }
     case 'SEND_MESSAGE':
       {
         const { message } = request.payload;
@@ -185,6 +185,7 @@ const handleRequest = (app, ws, requestUser) => clientData => {
 
       room.sendGameStateToRoom(app);
 
+      console.log(`Game started. Room: ${room.id}`);
       break;
     }
     case 'START_NEW_GAME': {
@@ -196,6 +197,8 @@ const handleRequest = (app, ws, requestUser) => clientData => {
 
       room.newBlankGame();
       room.sendGameStateToRoom(app);
+
+      console.log(`New game. Room: ${room.id}`);
       break;
     }
     case 'CLICK_CARD': {

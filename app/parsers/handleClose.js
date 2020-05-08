@@ -1,5 +1,5 @@
 const handleClose = (app, ws, user) => () => {
-  console.log('removing user ', user.id);
+  console.log(`Deleting user. User: ${user.id}`);
 
   if (user.roomID) {
     // removing user from room and pushing users to frontend

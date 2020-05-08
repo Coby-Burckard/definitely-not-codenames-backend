@@ -16,7 +16,7 @@ const server = express()
     console.log('express listening on port', PORT);
   });
 
-// intializ ing websocket
+// intializing websocket
 const wss = new WebSocket.Server({ server });
 console.log(`Starting server on port ${PORT}`);
 
@@ -26,10 +26,10 @@ const app = {
 };
 
 wss.on('connection', ws => {
-  console.log('New connection. Creating user...');
-
   const user = User.createWithConnection(ws);
   app.users.set(user.id, user);
+
+  console.log(`New connection. User: ${user.id}`);
 
   // Send user id to client
   ws.send(
