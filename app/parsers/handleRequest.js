@@ -14,6 +14,23 @@ const handleRequest = (app, ws, requestUser) => clientData => {
   }
 
   switch (request.type) {
+    case 'PING': {
+      const { ping } = request.payload;
+      if (!ping) {
+        break;
+      }
+
+      if (ping === 'PING') {
+        ws.send(
+          Response.fromObject({ type: 'SET_PONG', payload: { pong: 'PONG' } })
+        );
+      } else if (ping === 'PONG') {
+        ws.send(
+          Response.fromObject({ type: 'SET_PONG', payload: { pong: 'PING' } })
+        );
+      }
+      break;
+    }
     case 'CREATE_ROOM':
       {
         const newRoom = new Room();
@@ -53,6 +70,9 @@ const handleRequest = (app, ws, requestUser) => clientData => {
 
         existingRoom.sendGameUsersToRoom(app);
         existingRoom.sendGameStateToRoom(app);
+        ws.send(
+          Response.fromObject({ type: 'SET_PONG', payload: { pong: 'PING' } })
+        );
 
         console.log('User added to room: ', requestUser.id);
       }
