@@ -45,6 +45,7 @@ const handleRequest = (app, ws, requestUser) => clientData => {
       );
 
       console.log(`Room created. Room: ${newRoom.id}`);
+      console.log(`Current number of rooms: ${app.rooms.size}`);
       break;
     }
     case 'JOIN_ROOM': {
