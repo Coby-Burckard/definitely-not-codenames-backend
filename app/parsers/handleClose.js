@@ -11,6 +11,8 @@ const handleClose = (app, ws, user) => () => {
 
   // removing user from app memory
   app.users.delete(user.id);
+
+  console.log(`Current number of users: ${app.users.size}`);
 };
 
 module.exports = handleClose;
