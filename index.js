@@ -30,6 +30,7 @@ wss.on('connection', ws => {
   app.users.set(user.id, user);
 
   console.log(`New connection. User: ${user.id}`);
+  console.log(`Current number of users: ${app.users.length}`);
 
   // Send user id to client
   ws.send(
